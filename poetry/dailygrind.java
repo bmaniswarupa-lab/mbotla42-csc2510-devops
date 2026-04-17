@@ -17,4 +17,9 @@ while (away_the_hours) {
       }
 
 }
+try {
+    Thread.sleep(60000);
+} catch (InterruptedException e){
+   //ignore
+}
 }

@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+    - name: Install required packages
+      apt:
+        name:
+          - python3-apt
+          - apache2
+        state: present
+        update_cache: yes
+
+    - name: Copy apache config file
+      copy:
+        src: files/config/apache.conf
+        dest: /etc/apache2/sites-available/apache.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy index.html
+      copy:
+        src: files/site/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Disable default site
+      command: a2dissite 000-default.conf
+
+    - name: Enable apache site
+      command: a2ensite apache.conf
+
+
+    - name: Restart Apache service
+      service:
+        name: apache2
+        state: restarted
+
